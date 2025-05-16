@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { Upload, MessageSquare, Database, Send, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Upload, MessageSquare, Database, Send, X, LogOut } from 'lucide-react';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function SQLDataAnalysisAI() {
   const [file, setFile] = useState(null);
@@ -7,6 +9,37 @@ export default function SQLDataAnalysisAI() {
   const [messages, setMessages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  
+  const navigate = useNavigate();
+  const auth = getAuth();
+
+  // Check authentication status on component mount
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        // User is signed in
+        setUser(currentUser);
+      } else {
+        // User is signed out, redirect to login
+        navigate('/login');
+      }
+      setLoading(false);
+    });
+    
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [auth, navigate]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      // Redirect will happen automatically due to the onAuthStateChanged listener
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   const handleFileUpload = (e) => {
     const uploadedFile = e.target.files[0];
@@ -59,13 +92,39 @@ export default function SQLDataAnalysisAI() {
     setMessages([]);
   };
 
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header with User Info */}
       <header className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto p-4 flex items-center">
-          <Database className="text-blue-600 mr-2" />
-          <h1 className="text-xl font-semibold text-gray-800">SQL Data Analysis AI</h1>
+        <div className="max-w-4xl mx-auto p-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <Database className="text-blue-600 mr-2" />
+            <h1 className="text-xl font-semibold text-gray-800">SQL Data Analysis AI</h1>
+          </div>
+          
+          {/* User Profile and Sign Out */}
+          <div className="flex items-center">
+            <div className="mr-4 text-sm text-gray-600">
+              {user?.email}
+            </div>
+            <button 
+              onClick={handleSignOut}
+              className="flex items-center text-gray-600 hover:text-red-600 transition"
+              title="Sign out"
+            >
+              <LogOut size={18} />
+              <span className="ml-1">Sign Out</span>
+            </button>
+          </div>
         </div>
       </header>
 
