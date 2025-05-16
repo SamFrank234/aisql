@@ -48,7 +48,7 @@ export default function SQLDataAnalysisAI() {
     setLoading(true);
     setError(null);
 
-    const CORS_PROXY = 'https://corsproxy.io/?';
+    const CORS_PROXY = 'https://desolate-earth-42075-5b537d902179.herokuapp.com/';
     const TARGET_API = 'https://app2.text2sql.ai/api/external/fix-sql';   
     
     const body = {
