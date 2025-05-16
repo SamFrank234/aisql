@@ -1,7 +1,7 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-//import { secret } from '@aws-amplify/backend';
+import { secret } from '@aws-amplify/backend';
 
 const firebaseConfig = {
   apiKey: secret('FIREBASE_API_KEY'),
