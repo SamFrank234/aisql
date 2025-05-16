@@ -39,7 +39,8 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
-  return (
+console.log('REACT_APP_TEST_VARIABLE', process.env.FIREBASE_API_KEY);
+    return (
     <Router>
       <Routes>
         {/* Auth Routes */}
