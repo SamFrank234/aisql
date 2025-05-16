@@ -4,14 +4,14 @@ import { getAuth } from "firebase/auth";
 //import { secret } from '@aws-amplify/backend';
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-project-id.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: secret('FIREBASE_API_KEY'),
+  authDomain: secret('FIREBASE_AUTH_DOMAIN'),
+  projectId: secret('FIREBASE_PROJECT_ID'),
+  storageBucket: secret('FIREBASE_STORAGE_BUCKET'),
+  messagingSenderId: secret('FIREBASE_MESSAGING_SENDER_ID'),
+  appId: secret('FIREBASE_APP_ID'),
+  measurementId: secret('FIREBASE_MEASUREMENT_ID')
 };
-
 const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication and get a reference to the service
